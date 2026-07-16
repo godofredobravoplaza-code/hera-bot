@@ -1,0 +1,122 @@
+{
+  "name": "Hera AI Assistant",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "hera-in",
+        "options": {}
+      },
+      "id": "e4b21696-65de-47cc-a7ed-2a62d08ab6d9",
+      "name": "Webhook (Recibe WhatsApp)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [ 460, 300 ],
+      "webhookId": "hera-in"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Eres Hera, mi asistente y secretaria virtual personal. Te comunicas por WhatsApp, por lo que tus respuestas deben ser amigables, claras, usar emojis moderadamente y ser lo suficientemente concisas para leerse bien en un chat. Tienes acceso a herramientas para buscar en internet y gestionar tareas. Si no sabes algo, dilo, pero trata de buscar la solución siempre."
+        }
+      },
+      "id": "76e33db0-a7a2-4a0b-ae9b-0082f8d03c80",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1,
+      "position": [ 720, 300 ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/hera/send",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "chatId",
+              "value": "={{ $('Webhook (Recibe WhatsApp)').item.json.body.chatId }}"
+            },
+            {
+              "name": "message",
+              "value": "={{ $json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2db56061-f0ad-4158-b649-1af406fc17ce",
+      "name": "HTTP Request (Envia WhatsApp)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [ 1020, 300 ]
+    },
+    {
+      "parameters": {
+        "model": "gemini-1.5-flash",
+        "options": {}
+      },
+      "id": "gemini-model-id",
+      "name": "Google Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [ 700, 520 ]
+    },
+    {
+      "parameters": {
+        "sessionId": "={{ $('Webhook (Recibe WhatsApp)').item.json.body.chatId }}"
+      },
+      "id": "memory-id",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1,
+      "position": [ 860, 520 ]
+    }
+  ],
+  "connections": {
+    "Webhook (Recibe WhatsApp)": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request (Envia WhatsApp)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
