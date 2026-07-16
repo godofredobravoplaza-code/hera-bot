@@ -1,4 +1,4 @@
-FROM node:18-slim
+FROM node:lts-slim
 
 # Instalar dependencias para Chromium (necesario para Puppeteer)
 RUN apt-get update && apt-get install -y \
