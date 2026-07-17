@@ -48,6 +48,8 @@ mongoose.connect(MONGODB_URI).then(() => {
         console.log('\n===========================================================');
         console.log('📱 ESCANEA ESTE QR CON TU WHATSAPP (Dispositivos vinculados) 📱');
         qrcode.generate(qr, { small: true });
+        console.log('\n🔗 O ABRE ESTE ENLACE PARA VERLO MÁS CLARO:');
+        console.log(`https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(qr)}`);
         console.log('===========================================================\n');
     });
 
