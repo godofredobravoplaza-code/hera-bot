@@ -19,7 +19,7 @@ app.listen(PORT, () => {
 });
 
 // URL del Webhook de n8n Cloud
-const N8N_WEBHOOK_URL = process.env.N8N_WEBHOOK_URL || 'https://phenix2207.app.n8n.cloud/webhook-test/24bd963b-ffb9-48f6-bea6-3145f5a165af';
+const N8N_WEBHOOK_URL = process.env.N8N_WEBHOOK_URL || 'https://phenix2207.app.n8n.cloud/webhook/24bd963b-ffb9-48f6-bea6-3145f5a165af';
 const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
