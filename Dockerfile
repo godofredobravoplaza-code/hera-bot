@@ -20,6 +20,14 @@ RUN apt-get update && apt-get install -y \
     libxrandr2 \
     libpango-1.0-0 \
     libcairo2 \
+    libxfixes3 \
+    libxi6 \
+    libxcursor1 \
+    libxext6 \
+    libxrender1 \
+    libxtst6 \
+    libgtk-3-0 \
+    libx11-xcb1 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
